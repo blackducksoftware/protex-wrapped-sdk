@@ -1582,7 +1582,8 @@ public class ProtexServerProxyTest {
 		assertTrue(logger.getTestOutput().contains(
 				"set proxy server for service: "
 						+ http.getTarget().getAddress().getValue()));
-		assertTrue(logger.printTestOutput() + "\n  Expected > 3, got " + logger.getTestOutput().size(), logger.getTestOutput().size() > 3);
+		assertTrue(logger.printTestOutput() + "\n  Expected > 3, got " + logger.getTestOutput().size(),
+				logger.getTestOutput().size() > 3);
 		assertTrue("Log (expect \"Retrieving Api of class\": " + logger.getTestOutput().get(1), logger.getTestOutput().get(1)
 				.contains("Retrieving Api of class"));
 		assertTrue(logger.getTestOutput().get(3).contains("Executing method"));
@@ -1617,7 +1618,8 @@ public class ProtexServerProxyTest {
 
 		assertTrue(!logger.getTestOutput().isEmpty());
 		assertTrue(logger.getTestExceptions().isEmpty());
-		assertTrue(logger.printTestOutput() + "\n Expected > 4, got " + logger.getTestOutput().size(), logger.getTestOutput().size() > 4);
+		assertTrue(logger.printTestOutput() + "\n Expected > 4, got " + logger.getTestOutput().size(),
+				logger.getTestOutput().size() > 4);
 		assertTrue(logger.printTestOutput(), logger.printTestOutput().contains("useContextClassloader ..."));
 	}
 
