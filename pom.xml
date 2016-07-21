@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>protex-wrapped-sdk</artifactId>
-  <version>7.2.0.1.0.1-SNAPSHOT</version>
+  <version>7.2.0.1.0.1</version>
 
   <name>Suite SDK Integration library for Protex API 7.2.0</name>
   <url>https://www.github.com/blackducksoftware/protex-sdk</url>
