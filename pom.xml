@@ -28,7 +28,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <protex.api.version>7.2.0</protex.api.version>
-    <suite.integration.shared>1.0.3-SNAPSHOT</suite.integration.shared>
+    <suite.integration.shared>1.0.3</suite.integration.shared>
   </properties>
 
   <dependencies>
