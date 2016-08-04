@@ -23,27 +23,18 @@ package com.blackducksoftware.integration.protex.sdk;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
-import org.apache.cxf.transports.http.configuration.ProxyServerType;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.handler.WSHandlerConstants;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -67,14 +58,12 @@ import com.blackducksoftware.integration.protex.sdk.api.SynchronizationApiWeaved
 import com.blackducksoftware.integration.protex.sdk.api.TemplateApiWeaved;
 import com.blackducksoftware.integration.protex.sdk.api.UserApiWeaved;
 import com.blackducksoftware.integration.protex.sdk.exceptions.ServerConfigException;
-import com.blackducksoftware.integration.protex.sdk.factory.ProtexPageFilterFactory;
 import com.blackducksoftware.integration.suite.sdk.logging.LogLevel;
 import com.blackducksoftware.integration.suite.sdk.logging.SdkLogger;
 import com.blackducksoftware.integration.suite.sdk.util.ProgrammedPasswordCallback;
 import com.blackducksoftware.sdk.fault.SdkFault;
 import com.blackducksoftware.sdk.protex.comparison.FileComparisonApi;
 import com.blackducksoftware.sdk.protex.license.LicenseApi;
-import com.blackducksoftware.sdk.protex.license.LicenseOriginType;
 import com.blackducksoftware.sdk.protex.obligation.ObligationApi;
 import com.blackducksoftware.sdk.protex.policy.PolicyApi;
 import com.blackducksoftware.sdk.protex.policy.externalid.ExternalIdApi;
@@ -90,35 +79,15 @@ import com.blackducksoftware.sdk.protex.role.RoleApi;
 import com.blackducksoftware.sdk.protex.synchronization.SynchronizationApi;
 import com.blackducksoftware.sdk.protex.user.UserApi;
 
-import junit.framework.Assert;
-
 public class ProtexServerProxyTest {
-
-	private static Properties testProperties;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
 
-	@BeforeClass
-	public static void init() {
-		testProperties = new Properties();
-		final ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
-		final InputStream is = classLoader.getResourceAsStream("test.properties");
-
-		try {
-			testProperties.load(is);
-		} catch (final IOException e) {
-			System.err.println("reading test.properties failed!");
-		}
-
-	}
 
 	public ProtexServerProxy getServerProxy() throws Exception {
 		return new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"));
+				"https://www.google.com", "TEST_USERNAME", "TEST_PASSWORD");
 	}
 
 	@Test
@@ -126,8 +95,7 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Server Url.");
 		new ProtexServerProxy(null,
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"));
+				"TEST_USERNAME", "TEST_PASSWORD");
 
 	}
 
@@ -136,8 +104,7 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Username.");
 		new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"), null,
-				testProperties.getProperty("TEST_PASSWORD"));
+				"https://www.google.com", null, "TEST_PASSWORD");
 	}
 
 	@Test
@@ -145,16 +112,14 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Password.");
 		new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"), null);
+				"https://www.google.com", "TEST_USERNAME", null);
 	}
 
 	@Test
 	public void testProtexServerProxyEmptyUrl() throws Exception {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Server Url.");
-		new ProtexServerProxy("", testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"));
+		new ProtexServerProxy("", "TEST_USERNAME", "TEST_PASSWORD");
 	}
 
 	@Test
@@ -162,8 +127,7 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Username.");
 		new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"), "",
-				testProperties.getProperty("TEST_PASSWORD"));
+				"https://www.google.com", "", "TEST_PASSWORD");
 	}
 
 	@Test
@@ -171,8 +135,7 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Password.");
 		new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"), null);
+				"https://www.google.com", "TEST_USERNAME", null);
 	}
 
 	@Test
@@ -180,8 +143,7 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Server Url.");
 		new ProtexServerProxy(null,
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 0L);
+				"TEST_USERNAME", "TEST_PASSWORD", 0L);
 	}
 
 	@Test
@@ -189,8 +151,7 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Username.");
 		new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"), null,
-				testProperties.getProperty("TEST_PASSWORD"), 0L);
+				"https://www.google.com", null, "TEST_PASSWORD", 0L);
 	}
 
 	@Test
@@ -198,16 +159,14 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Password.");
 		new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"), null, 0L);
+				"https://www.google.com", "TEST_USERNAME", null, 0L);
 	}
 
 	@Test
 	public void testProtexServerProxyEmptyUrlWithTimeout() throws Exception {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Server Url.");
-		new ProtexServerProxy("", testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 0L);
+		new ProtexServerProxy("", "TEST_USERNAME", "TEST_PASSWORD", 0L);
 	}
 
 	@Test
@@ -216,8 +175,7 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Username.");
 		new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"), "",
-				testProperties.getProperty("TEST_PASSWORD"), 0L);
+				"https://www.google.com", "", "TEST_PASSWORD", 0L);
 	}
 
 	@Test
@@ -226,21 +184,18 @@ public class ProtexServerProxyTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Did not provide a valid Protex Password.");
 		new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"), "", 0L);
+				"https://www.google.com", "TEST_USERNAME", "", 0L);
 	}
 
 	@Test
 	public void testProtexServerProxy() throws Exception {
 		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"));
+				"https://www.google.com", "TEST_USERNAME", "TEST_PASSWORD");
 		assertEquals(Long.valueOf(300000L), server.getTimeout());
 		assertEquals(
-				new URL(testProperties.getProperty("TEST_PROTEX_SERVER_URL")),
+				new URL("https://www.google.com"),
 				server.getBaseUrl());
-		assertEquals(testProperties.getProperty("TEST_USERNAME"),
+		assertEquals("TEST_USERNAME",
 				server.getUsername());
 		final Field remotePropsField = ProtexServerProxy.class
 				.getDeclaredField("remoteProps");
@@ -254,9 +209,8 @@ public class ProtexServerProxyTest {
 		passwordCacheField.setAccessible(true);
 		final Map<String, String> passwordCache = (Map<String, String>) passwordCacheField
 				.get(passwordCallback);
-		final String password = passwordCache.get(testProperties
-				.getProperty("TEST_USERNAME"));
-		assertEquals(testProperties.getProperty("TEST_PASSWORD"), password);
+		final String password = passwordCache.get("TEST_USERNAME");
+		assertEquals("TEST_PASSWORD", password);
 
 		assertNotNull(remoteProps);
 		assertTrue(remoteProps.containsKey(WSHandlerConstants.ACTION));
@@ -271,21 +225,19 @@ public class ProtexServerProxyTest {
 				remoteProps.get(WSHandlerConstants.PASSWORD_TYPE));
 		assertEquals("false",
 				remoteProps.get(WSHandlerConstants.MUST_UNDERSTAND));
-		assertEquals(testProperties.getProperty("TEST_USERNAME"),
+		assertEquals("TEST_USERNAME",
 				remoteProps.get(WSHandlerConstants.USER));
 	}
 
 	@Test
 	public void testProtexServerProxyWithTimeoutIndefinite() throws Exception {
 		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 0L);
+				"https://www.google.com", "TEST_USERNAME", "TEST_PASSWORD", 0L);
 		assertEquals(Long.valueOf(0L), server.getTimeout());
 		assertEquals(
-				new URL(testProperties.getProperty("TEST_PROTEX_SERVER_URL")),
+				new URL("https://www.google.com"),
 				server.getBaseUrl());
-		assertEquals(testProperties.getProperty("TEST_USERNAME"),
+		assertEquals("TEST_USERNAME",
 				server.getUsername());
 
 		final Field remotePropsField = ProtexServerProxy.class
@@ -301,9 +253,8 @@ public class ProtexServerProxyTest {
 		passwordCacheField.setAccessible(true);
 		final Map<String, String> passwordCache = (Map<String, String>) passwordCacheField
 				.get(passwordCallback);
-		final String password = passwordCache.get(testProperties
-				.getProperty("TEST_USERNAME"));
-		assertEquals(testProperties.getProperty("TEST_PASSWORD"), password);
+		final String password = passwordCache.get("TEST_USERNAME");
+		assertEquals("TEST_PASSWORD", password);
 
 		assertNotNull(remoteProps);
 		assertTrue(remoteProps.containsKey(WSHandlerConstants.ACTION));
@@ -318,21 +269,19 @@ public class ProtexServerProxyTest {
 				remoteProps.get(WSHandlerConstants.PASSWORD_TYPE));
 		assertEquals("false",
 				remoteProps.get(WSHandlerConstants.MUST_UNDERSTAND));
-		assertEquals(testProperties.getProperty("TEST_USERNAME"),
+		assertEquals("TEST_USERNAME",
 				remoteProps.get(WSHandlerConstants.USER));
 	}
 
 	@Test
 	public void testProtexServerProxyWithTimeout() throws Exception {
 		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 300000L * 10);
+				"https://www.google.com", "TEST_USERNAME", "TEST_PASSWORD", 300000L * 10);
 		assertEquals(Long.valueOf(300000L * 10), server.getTimeout());
 		assertEquals(
-				new URL(testProperties.getProperty("TEST_PROTEX_SERVER_URL")),
+				new URL("https://www.google.com"),
 				server.getBaseUrl());
-		assertEquals(testProperties.getProperty("TEST_USERNAME"),
+		assertEquals("TEST_USERNAME",
 				server.getUsername());
 
 		final Field remotePropsField = ProtexServerProxy.class
@@ -348,9 +297,8 @@ public class ProtexServerProxyTest {
 		passwordCacheField.setAccessible(true);
 		final Map<String, String> passwordCache = (Map<String, String>) passwordCacheField
 				.get(passwordCallback);
-		final String password = passwordCache.get(testProperties
-				.getProperty("TEST_USERNAME"));
-		assertEquals(testProperties.getProperty("TEST_PASSWORD"), password);
+		final String password = passwordCache.get("TEST_USERNAME");
+		assertEquals("TEST_PASSWORD", password);
 
 		assertNotNull(remoteProps);
 		assertTrue(remoteProps.containsKey(WSHandlerConstants.ACTION));
@@ -365,7 +313,7 @@ public class ProtexServerProxyTest {
 				remoteProps.get(WSHandlerConstants.PASSWORD_TYPE));
 		assertEquals("false",
 				remoteProps.get(WSHandlerConstants.MUST_UNDERSTAND));
-		assertEquals(testProperties.getProperty("TEST_USERNAME"),
+		assertEquals("TEST_USERNAME",
 				remoteProps.get(WSHandlerConstants.USER));
 	}
 
@@ -1338,309 +1286,6 @@ public class ProtexServerProxyTest {
 	}
 
 
-	@Test
-	public void testProtexServerProxyWithProxy() throws Exception {
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 300000L * 10);
-
-		final ProxyServerType proxyType = ProxyServerType.fromValue(testProperties
-				.getProperty("TEST_PROXY_TYPE"));
-
-		server.setProxyServer(testProperties.getProperty("TEST_PROXY_SERVER"),
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				proxyType, false);
-
-		final Field proxyServerField = ProtexServerProxy.class
-				.getDeclaredField("proxyServer");
-		proxyServerField.setAccessible(true);
-		final String proxyServer = (String) proxyServerField.get(server);
-		assertEquals(testProperties.getProperty("TEST_PROXY_SERVER"),
-				proxyServer);
-
-		final Field proxyPortField = ProtexServerProxy.class
-				.getDeclaredField("proxyPort");
-		proxyPortField.setAccessible(true);
-		final int port = (Integer) proxyPortField.get(server);
-		assertEquals(
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				Integer.valueOf(port));
-		final Field proxyTypeField = ProtexServerProxy.class
-				.getDeclaredField("proxyType");
-		proxyTypeField.setAccessible(true);
-		final ProxyServerType proxyTypeValue = (ProxyServerType) proxyTypeField
-				.get(server);
-		assertEquals(ProxyServerType.HTTP, proxyTypeValue);
-	}
-
-	@Test
-	public void testProtexServerProxyWithProxyUpdateApis() throws Exception {
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 300000L * 10);
-		final UserApiWeaved api = (UserApiWeaved) server.getUserApi();
-
-		final Client client = ClientProxy.getClient(api.getApi());
-		final HTTPConduit http = (HTTPConduit) client.getConduit();
-		assertEquals(300000L * 10, http.getClient().getReceiveTimeout());
-		assertEquals(300000L * 10, http.getClient().getConnectionTimeout());
-		assertNull(http.getClient().getProxyServer());
-
-		final ProxyServerType proxyType = ProxyServerType.fromValue(testProperties
-				.getProperty("TEST_PROXY_TYPE"));
-
-		server.setProxyServer(testProperties.getProperty("TEST_PROXY_SERVER"),
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				proxyType, true);
-
-		final UserApiWeaved api2 = (UserApiWeaved) server.getUserApi();
-
-		final Client client2 = ClientProxy.getClient(api2.getApi());
-		final HTTPConduit http2 = (HTTPConduit) client2.getConduit();
-		assertEquals(300000L * 10, http2.getClient().getReceiveTimeout());
-		assertEquals(300000L * 10, http2.getClient().getConnectionTimeout());
-		assertEquals(testProperties.getProperty("TEST_PROXY_SERVER"), http2
-				.getClient().getProxyServer());
-		assertEquals(
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				Integer.valueOf(http2.getClient().getProxyServerPort()));
-		assertEquals(proxyType, http2.getClient().getProxyServerType());
-
-		final Field proxyServerField = ProtexServerProxy.class
-				.getDeclaredField("proxyServer");
-		proxyServerField.setAccessible(true);
-		final String proxyServer = (String) proxyServerField.get(server);
-		assertEquals(testProperties.getProperty("TEST_PROXY_SERVER"),
-				proxyServer);
-
-		final Field proxyPortField = ProtexServerProxy.class
-				.getDeclaredField("proxyPort");
-		proxyPortField.setAccessible(true);
-		final int port = (Integer) proxyPortField.get(server);
-		assertEquals(
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				Integer.valueOf(port));
-
-		final Field proxyTypeField = ProtexServerProxy.class
-				.getDeclaredField("proxyType");
-		proxyTypeField.setAccessible(true);
-		final ProxyServerType proxyTypeValue = (ProxyServerType) proxyTypeField
-				.get(server);
-		assertEquals(ProxyServerType.HTTP, proxyTypeValue);
-
-		final RoleApiWeaved api3 = (RoleApiWeaved) server.getRoleApi(111L);
-
-		final Client client3 = ClientProxy.getClient(api3.getApi());
-		final HTTPConduit http3 = (HTTPConduit) client3.getConduit();
-		assertEquals(111L, http3.getClient().getReceiveTimeout());
-		assertEquals(111L, http3.getClient().getConnectionTimeout());
-		assertEquals(testProperties.getProperty("TEST_PROXY_SERVER"), http3
-				.getClient().getProxyServer());
-		assertEquals(
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				Integer.valueOf(http3.getClient().getProxyServerPort()));
-		assertEquals(proxyType, http3.getClient().getProxyServerType());
-
-	}
-
-	@Test
-	public void testProtexServerProxyWithProxyNullProxyName() throws Exception {
-		exception.expect(IllegalArgumentException.class);
-		exception
-		.expectMessage("Can not set the proxy with an empty proxy name.");
-
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 300000L * 10);
-
-		final ProxyServerType proxyType = ProxyServerType.fromValue(testProperties
-				.getProperty("TEST_PROXY_TYPE"));
-
-		server.setProxyServer(null,
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				proxyType, false);
-
-	}
-
-	@Test
-	public void testProtexServerProxyWithProxyEmptyProxyName() throws Exception {
-		exception.expect(IllegalArgumentException.class);
-		exception
-		.expectMessage("Can not set the proxy with an empty proxy name.");
-
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 300000L * 10);
-
-		final ProxyServerType proxyType = ProxyServerType.fromValue(testProperties
-				.getProperty("TEST_PROXY_TYPE"));
-
-		server.setProxyServer("",
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				proxyType, false);
-
-	}
-
-	@Test
-	public void testProtexServerProxyWithProxyInvalidPort() throws Exception {
-		exception.expect(RuntimeException.class);
-		exception
-		.expectMessage("Need to provide the port of the proxy server.");
-
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 300000L * 10);
-
-		final ProxyServerType proxyType = ProxyServerType.fromValue(testProperties
-				.getProperty("TEST_PROXY_TYPE"));
-
-		server.setProxyServer(testProperties.getProperty("TEST_PROXY_SERVER"),
-				0, proxyType, false);
-	}
-
-	@Test
-	public void testProtexServerProxyWithProxyNullProxyType() throws Exception {
-		exception.expect(RuntimeException.class);
-		exception
-		.expectMessage("Can not set the proxy without knowing the proxy type. Ex: http, socks, etc.");
-
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 300000L * 10);
-
-		server.setProxyServer(testProperties.getProperty("TEST_PROXY_SERVER"),
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				null, false);
-
-	}
-
-	@Test
-	public void testProtexServerProxyWithDebugLogging() throws Exception {
-		final TestLogger logger = new TestLogger();
-		logger.setLogLevel(LogLevel.DEBUG);
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"),
-				300000L * 10);
-		server.setLogger(logger);
-		final ProxyServerType proxyType = ProxyServerType.fromValue(testProperties
-				.getProperty("TEST_PROXY_TYPE"));
-
-		server.setProxyServer(testProperties.getProperty("TEST_PROXY_SERVER"),
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				proxyType, true);
-		final Client client = ClientProxy.getClient(((UserApiWeaved) server.getUserApi()).getApi());
-		final HTTPConduit http = (HTTPConduit) client.getConduit();
-		assertTrue(!logger.getTestOutput().isEmpty());
-		assertTrue(logger.getTestExceptions().isEmpty());
-		assertTrue(logger.getTestOutput().contains(
-				"Using " + ProxyServerType.HTTP + " proxy: "
-						+ testProperties.getProperty("TEST_PROXY_SERVER") + ":"
-						+ testProperties.getProperty("TEST_PROXY_PORT")));
-		assertTrue(logger.getTestOutput().contains(
-				"set proxy server for service: "
-						+ http.getTarget().getAddress().getValue()));
-		assertTrue("Expected 2, got " + logger.getTestOutput().size(), logger.getTestOutput().size() == 2);
-	}
-
-	@Test
-	public void testProtexServerProxyWithTraceLogging() throws Exception {
-		final TestLogger logger = new TestLogger();
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"),
-				300000L * 1000);
-		logger.setLogLevel(LogLevel.TRACE);
-		server.setLogger(logger);
-		final ProxyServerType proxyType = ProxyServerType.fromValue(testProperties
-				.getProperty("TEST_PROXY_TYPE"));
-
-		server.setProxyServer(testProperties.getProperty("TEST_PROXY_SERVER"),
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				proxyType, true);
-		try {
-			server.getUserApi().getUserAccountsUrl();
-		} catch (final SdkFault f) {
-			throw f;
-		}
-		final Client client = ClientProxy.getClient(((UserApiWeaved) server.getUserApi()).getApi());
-		final HTTPConduit http = (HTTPConduit) client.getConduit();
-		assertTrue(!logger.getTestOutput().isEmpty());
-		assertTrue(logger.getTestExceptions().isEmpty());
-		assertTrue(logger.getTestOutput().contains(
-				"Using " + ProxyServerType.HTTP + " proxy: "
-						+ testProperties.getProperty("TEST_PROXY_SERVER") + ":"
-						+ testProperties.getProperty("TEST_PROXY_PORT")));
-		assertTrue(logger.getTestOutput().contains(
-				"set proxy server for service: "
-						+ http.getTarget().getAddress().getValue()));
-		assertTrue(logger.printTestOutput() + "\n  Expected > 3, got " + logger.getTestOutput().size(),
-				logger.getTestOutput().size() > 3);
-		assertTrue("Log (expect \"Retrieving Api of class\": " + logger.getTestOutput().get(1), logger.getTestOutput().get(1)
-				.contains("Retrieving Api of class"));
-		assertTrue(logger.getTestOutput().get(3).contains("Executing method"));
-		assertTrue(logger.printTestOutput()
-				.contains("Execution time of method"));
-	}
-
-	@Test
-	public void testProtexServerProxyWithTraceLoggingAndContextLoading()
-			throws Exception {
-		final TestLogger logger = new TestLogger();
-		logger.setLogLevel(LogLevel.TRACE);
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"),
-				300000L * 1000);
-		server.setLogger(logger);
-		server.setUseContextClassLoader(true);
-		final ProxyServerType proxyType = ProxyServerType.fromValue(testProperties
-				.getProperty("TEST_PROXY_TYPE"));
-		server.setProxyServer(testProperties.getProperty("TEST_PROXY_SERVER"),
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				proxyType, true);
-		try {
-			server.getUserApi().getUserAccountsUrl();
-		} catch (final SdkFault f) {
-			throw f;
-		} finally {
-			server.setUseContextClassLoader(false);
-		}
-
-		assertTrue(!logger.getTestOutput().isEmpty());
-		assertTrue(logger.getTestExceptions().isEmpty());
-		assertTrue(logger.printTestOutput() + "\n Expected > 4, got " + logger.getTestOutput().size(),
-				logger.getTestOutput().size() > 4);
-		assertTrue(logger.printTestOutput(), logger.printTestOutput().contains("useContextClassloader ..."));
-	}
-
-	@Test
-	public void testProtexServerProxyWithLoggingDebuggingOff() throws Exception {
-		final TestLogger logger = new TestLogger();
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"),
-				300000L * 10);
-		server.setLogger(logger);
-		final ProxyServerType proxyType = ProxyServerType.fromValue(testProperties
-				.getProperty("TEST_PROXY_TYPE"));
-
-		server.setProxyServer(testProperties.getProperty("TEST_PROXY_SERVER"),
-				Integer.valueOf(testProperties.getProperty("TEST_PROXY_PORT")),
-				proxyType, true);
-		assertTrue("Expected empty, got " + logger.getTestOutput().size(), logger.getTestOutput().isEmpty());
-		assertTrue(logger.getTestExceptions().isEmpty());
-	}
 
 	@Test
 	public void testGetApiInvalidServerUrl() throws Exception {
@@ -1648,8 +1293,7 @@ public class ProtexServerProxyTest {
 		exception.expectMessage("no protocol: NOTAVALID/URL");
 		final TestLogger logger = new TestLogger();
 		final ProtexServerProxy server = new ProtexServerProxy("NOTAVALID/URL",
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"),
+				"TEST_USERNAME", "TEST_PASSWORD",
 				300000L * 10);
 		server.setLogger(logger);
 		server.getUserApi();
@@ -1663,8 +1307,7 @@ public class ProtexServerProxyTest {
 		final TestLogger logger = new TestLogger();
 		final ProtexServerProxy server = new ProtexServerProxy(
 				"http://THISSERVERSHOULDNOTEXIST",
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"),
+				"TEST_USERNAME", "TEST_PASSWORD",
 				300000L * 10);
 		server.setLogger(logger);
 
@@ -1675,196 +1318,14 @@ public class ProtexServerProxyTest {
 		}
 	}
 
-	@Test(expected = SdkFault.class)
-	public void testSdkFaultWrapper() throws Exception {
-		final TestLogger logger = new TestLogger();
-		logger.setLogLevel(LogLevel.DEBUG);
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"),
-				300000L * 10);
-		server.setLogger(logger);
-		try {
-			final List<LicenseOriginType> licenseTypes = Arrays
-					.asList(LicenseOriginType.values());
-			// PROJECT_LOCAL is not an allowed value for filterByLicenseType parameter --> SDKFault thrown
-			server.getLicenseApi().getLicenses(
-					licenseTypes,
-					ProtexPageFilterFactory.createLicenseInfoPageFilter(0,
-							Integer.MAX_VALUE, false));
-		} catch (final SdkFault e) {
-			// somehow the order of certain attributes is swapped between my client
-			// and the Jenkins-CI, so make partial text asserts.
-			assertTrue(
-					"starts with: " + logger.printTestOutput(),
-					logger.printTestOutput()
-					.startsWith(
-							"SDKFAULT {Method : List com.blackducksoftware.integration.protex.sdk.api.LicenseApiWeaved.getLicenses(List, LicenseInfoPageFilter) :: Input Parameters "));
-			assertTrue(
-					"ends with: " + logger.printTestOutput(),
-					logger.printTestOutput()
-					.endsWith(
-							" does not support the value \"PROJECT_LOCAL\" for the argument \"filterByLicenseType\".}"));
-			throw e;
-		}
-		Assert.assertTrue("Should throw execption", false);
-	}
-
 	@Test
 	public void testGetApiInvalidUserIncludedPrefix() throws Exception {
 		exception.expect(ServerConfigException.class);
 		exception.expectMessage("Do not include '/protex' in the Server Url.");
 		new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL")
-				+ "/protex",
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 300000L * 10);
-	}
-
-	@Test
-	public void testSingleThreadApiCalls() throws Exception {
-		// FIXME - I'm not quite sure what needs testing here - all other api calls are single threaded anyway - may be
-		// this was before we made the class loader switching standard?
-		final TestLogger logger = new TestLogger();
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"),
-				300000L * 10);
-		server.setLogger(logger);
-		final long startNano = System.nanoTime();
-		long collectiveTimes = 0L;
-		try {
-			final long start1 = System.nanoTime();
-			server.getUserApi().getUserByEmail(
-					testProperties.getProperty("TEST_USERNAME"));
-			collectiveTimes += System.nanoTime() - start1;
-		} catch (final SdkFault f) {
-			throw f;
-		}
-		try {
-			final long start2 = System.nanoTime();
-			server.getUserApi().getUserByEmail(
-					testProperties.getProperty("TEST_USERNAME"));
-			collectiveTimes += System.nanoTime() - start2;
-		} catch (final SdkFault f) {
-			throw f;
-		}
-		try {
-			final long start3 = System.nanoTime();
-			server.getUserApi().getUserByEmail(testProperties.getProperty("TEST_USERNAME"));
-			collectiveTimes += System.nanoTime() - start3;
-		} catch (final SdkFault f) {
-			throw f;
-		}
-		try {
-			final long start4 = System.nanoTime();
-			server.getUserApi().getUserByEmail(testProperties.getProperty("TEST_USERNAME"));
-			collectiveTimes += System.nanoTime() - start4;
-		} catch (final SdkFault f) {
-			throw f;
-		}
-
-		final long endNano = System.nanoTime() - startNano;
-
-		assertTrue(endNano >= collectiveTimes);
-	}
-
-	@Test
-	public void testMultiThreadApiCalls() throws Exception {
-		final TestLogger logger = new TestLogger();
-		final ProtexServerProxy server = new ProtexServerProxy(
-				testProperties.getProperty("TEST_PROTEX_SERVER_URL"),
-				testProperties.getProperty("TEST_USERNAME"),
-				testProperties.getProperty("TEST_PASSWORD"), 300L * 10);
-		server.setLogger(logger);
-		// Should be thread safe
-		final ArrayList<TestThread> threads = new ArrayList<TestThread>();
-		threads.add(new TestThread(server, "1111"));
-		threads.add(new TestThread(server, "2222"));
-		threads.add(new TestThread(server, "3333"));
-		threads.add(new TestThread(server, "4444"));
-
-		final long startNano = System.nanoTime();
-		for (final TestThread thread : threads) {
-			while (thread.running) {
-				Thread.sleep(100);
-			}
-		}
-		final long durationNano = System.nanoTime() - startNano;
-		System.out.println("Total running time of multithreaded api calls : "
-				+ durationNano / 1000 + " \u03BCs");
-		long collectiveTimes = 0L;
-		for (final TestThread thread : threads) {
-			collectiveTimes += thread.executionTime;
-		}
-		System.out
-		.println("Sum of the running times of each threaded api call : "
-				+ collectiveTimes / 1000 + " \u03BCs");
-		assertTrue("durationNano (" + (durationNano / 1000) + " \u03BCs"
-				+ ") >= collective Times (" + (collectiveTimes / 1000)
-				+ " \u03BCs)", durationNano < collectiveTimes);
-	}
-
-	class TestThread implements Runnable {
-		private final String threadName;
-
-		private final ProtexServerProxy server;
-
-		public long executionTime;
-
-		public boolean running = true;
-
-		TestThread(final ProtexServerProxy server, final String threadName) {
-			this.server = server;
-			this.threadName = threadName;
-			System.out.println("New thread : " + threadName);
-			final Thread thread = new Thread(this);
-			thread.start();
-		}
-
-		@Override
-		public void run() {
-			System.out.println("Running thread : " + threadName);
-			final long startNano = System.nanoTime();
-			try {
-				UserApi originalApi = null;
-				try {
-					for (int i = 0; i < 300; i++) {
-						Thread.sleep(10);
-						final UserApi userApi = server.getUserApi();
-						if (originalApi == null) {
-							originalApi = userApi;
-							System.out.println("Thread " + threadName
-									+ " UserApi= " + userApi);
-						} else {
-							// objects should be identical per thread
-							assertTrue(userApi == originalApi);
-						}
-
-						userApi.getUserByEmail(testProperties
-								.getProperty("TEST_USERNAME"));
-					}
-				} catch (final SdkFault e) {
-					e.printStackTrace();
-					throw new RuntimeException(e.getMessage(), e);
-				} catch (final ServerConfigException e) {
-					e.printStackTrace();
-					throw new RuntimeException(e.getMessage(), e);
-				} catch (final InterruptedException e) {
-					System.err.println("[WARNING] interrupted" + e.getMessage());
-				} catch (final Throwable t) {
-					System.err.println("[WARNING]" + t.getMessage());
-					t.printStackTrace();
-					throw new RuntimeException(t.getMessage(), t);
-				}
-			} finally {
-				executionTime = System.nanoTime() - startNano;
-				running = false;
-				System.out.println("Thread " + threadName + " exiting.");
-			}
-		}
+				"https://www.google.com"
+						+ "/protex",
+						"TEST_USERNAME", "TEST_PASSWORD", 300000L * 10);
 	}
 
 }
