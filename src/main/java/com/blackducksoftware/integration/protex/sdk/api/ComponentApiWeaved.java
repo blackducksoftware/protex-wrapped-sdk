@@ -29,126 +29,151 @@ import com.blackducksoftware.sdk.protex.common.ComponentPageFilter;
 import com.blackducksoftware.sdk.protex.common.DownloadHashType;
 import com.blackducksoftware.sdk.protex.component.Component;
 import com.blackducksoftware.sdk.protex.component.ComponentApi;
+import com.blackducksoftware.sdk.protex.component.ComponentReplacement;
 import com.blackducksoftware.sdk.protex.component.ComponentRequest;
+import com.blackducksoftware.sdk.protex.component.CustomComponentRequest;
 import com.blackducksoftware.sdk.protex.obligation.AssignedObligation;
 import com.blackducksoftware.sdk.protex.obligation.AssignedObligationRequest;
 
 public class ComponentApiWeaved extends WeavedApi<ComponentApi> implements ComponentApi {
 
-    public ComponentApiWeaved(ComponentApi api) {
+    public ComponentApiWeaved(final ComponentApi api) {
         super(api);
     }
 
     @Override
-    public String addComponentObligation(String arg0, AssignedObligationRequest arg1) throws SdkFault {
+    public String addComponentObligation(final String arg0, final AssignedObligationRequest arg1) throws SdkFault {
         return getApi().addComponentObligation(arg0, arg1);
     }
 
     @Override
-    public String addComponentObligationUsingReference(String arg0, String arg1, Boolean arg2, Boolean arg3) throws SdkFault {
+    public String addComponentObligationUsingReference(final String arg0, final String arg1, final Boolean arg2, final Boolean arg3) throws SdkFault {
         return getApi().addComponentObligationUsingReference(arg0, arg1, arg2, arg3);
     }
 
     @Override
-    public void addTag(String arg0, String arg1, String arg2) throws SdkFault {
+    public void addTag(final String arg0, final String arg1, final String arg2) throws SdkFault {
         getApi().addTag(arg0, arg1, arg2);
     }
 
     @Override
-    public List<ComponentKey> checkComponentsExist(List<ComponentKey> arg0) throws SdkFault {
+    public List<ComponentKey> checkComponentsExist(final List<ComponentKey> arg0) throws SdkFault {
         return getApi().checkComponentsExist(arg0);
     }
 
     @Override
-    public ComponentKey createComponent(ComponentRequest arg0) throws SdkFault {
+    public ComponentKey createComponent(final ComponentRequest arg0) throws SdkFault {
         return getApi().createComponent(arg0);
     }
 
     @Override
-    public void deleteComponent(ComponentKey arg0) throws SdkFault {
+    public void deleteComponent(final ComponentKey arg0) throws SdkFault {
         getApi().deleteComponent(arg0);
     }
 
     @Override
-    public Component getComponentByKey(ComponentKey arg0) throws SdkFault {
+    public Component getComponentByKey(final ComponentKey arg0) throws SdkFault {
         return getApi().getComponentByKey(arg0);
     }
 
     @Override
-    public List<AssignedObligation> getComponentObligations(String arg0) throws SdkFault {
+    public List<AssignedObligation> getComponentObligations(final String arg0) throws SdkFault {
         return getApi().getComponentObligations(arg0);
     }
 
     @Override
-    public List<Component> getComponentVersions(String arg0) throws SdkFault {
+    public List<Component> getComponentVersions(final String arg0) throws SdkFault {
         return getApi().getComponentVersions(arg0);
     }
 
     @Override
-    public List<Component> getComponents(ComponentPageFilter arg0) throws SdkFault {
+    public List<Component> getComponents(final ComponentPageFilter arg0) throws SdkFault {
         return getApi().getComponents(arg0);
     }
 
     @Override
-    public List<Component> getComponentsByKey(List<ComponentKey> arg0) throws SdkFault {
+    public List<Component> getComponentsByKey(final List<ComponentKey> arg0) throws SdkFault {
         return getApi().getComponentsByKey(arg0);
     }
 
     @Override
-    public List<Component> getComponentsByName(String arg0, String arg1) throws SdkFault {
+    public List<Component> getComponentsByName(final String arg0, final String arg1) throws SdkFault {
         return getApi().getComponentsByName(arg0, arg1);
     }
 
     @Override
-    public List<Component> getTaggedComponents(String arg0, String arg1) throws SdkFault {
+    public List<Component> getTaggedComponents(final String arg0, final String arg1) throws SdkFault {
         return getApi().getTaggedComponents(arg0, arg1);
     }
 
     @Override
-    public List<String> getTags(String arg0, String arg1) throws SdkFault {
+    public List<String> getTags(final String arg0, final String arg1) throws SdkFault {
         return getApi().getTags(arg0, arg1);
     }
 
     @Override
-    public void removeComponentObligation(String arg0, String arg1) throws SdkFault {
+    public void removeComponentObligation(final String arg0, final String arg1) throws SdkFault {
         getApi().removeComponentObligation(arg0, arg1);
     }
 
     @Override
-    public void removeTag(String arg0, String arg1, String arg2) throws SdkFault {
+    public void removeTag(final String arg0, final String arg1, final String arg2) throws SdkFault {
         getApi().removeTag(arg0, arg1, arg2);
     }
 
     @Override
-    public void resetComponent(ComponentKey arg0) throws SdkFault {
+    public void resetComponent(final ComponentKey arg0) throws SdkFault {
         getApi().resetComponent(arg0);
     }
 
     @Override
-    public List<Component> suggestComponents(String arg0, ComponentPageFilter arg1) throws SdkFault {
+    public List<Component> suggestComponents(final String arg0, final ComponentPageFilter arg1) throws SdkFault {
         return getApi().suggestComponents(arg0, arg1);
     }
 
     @Override
-    public void updateComponent(ComponentKey arg0, ComponentRequest arg1) throws SdkFault {
+    public void updateComponent(final ComponentKey arg0, final ComponentRequest arg1) throws SdkFault {
         getApi().updateComponent(arg0, arg1);
     }
 
     @Override
-    public void updateComponentObligation(String arg0, String arg1, AssignedObligationRequest arg2) throws SdkFault {
+    public void updateComponentObligation(final String arg0, final String arg1, final AssignedObligationRequest arg2) throws SdkFault {
         getApi().updateComponentObligation(arg0, arg1, arg2);
     }
 
     @Override
-    public List<Component> getComponentsByHash(DownloadHashType arg0,
-            String arg1) throws SdkFault {
+    public List<Component> getComponentsByHash(final DownloadHashType arg0, final String arg1) throws SdkFault {
         return getApi().getComponentsByHash(arg0, arg1);
     }
 
     @Override
-    public List<String> getHashesByComponent(DownloadHashType arg0,
-            ComponentKey arg1) throws SdkFault {
+    public List<String> getHashesByComponent(final DownloadHashType arg0, final ComponentKey arg1) throws SdkFault {
         return getApi().getHashesByComponent(arg0, arg1);
+    }
+
+    @Override
+    public ComponentKey createCustomComponent(final CustomComponentRequest arg0) throws SdkFault {
+        return getApi().createCustomComponent(arg0);
+    }
+
+    @Override
+    public ComponentKey createCustomComponentVersion(final String arg0, final CustomComponentRequest arg1) throws SdkFault {
+        return getApi().createCustomComponentVersion(arg0, arg1);
+    }
+
+    @Override
+    public List<Component> getComponentsVersions(final List<String> arg0) throws SdkFault {
+        return getApi().getComponentsVersions(arg0);
+    }
+
+    @Override
+    public List<ComponentReplacement> getReplacementComponents(final List<ComponentKey> arg0) throws SdkFault {
+        return getApi().getReplacementComponents(arg0);
+    }
+
+    @Override
+    public void updateCustomComponent(final ComponentKey arg0, final CustomComponentRequest arg1) throws SdkFault {
+        getApi().updateCustomComponent(arg0, arg1);
     }
 
 }

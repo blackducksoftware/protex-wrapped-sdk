@@ -9,9 +9,9 @@
   </parent>
 
   <artifactId>protex-wrapped-sdk</artifactId>
-  <version>7.2.0.1.0.2-SNAPSHOT</version>
+  <version>7.8.0.1.0.0-SNAPSHOT</version>
 
-  <name>Suite SDK Integration library for Protex API 7.2.0</name>
+  <name>Suite SDK Integration library for Protex API</name>
   <url>https://www.github.com/blackducksoftware/protex-sdk</url>
   <inceptionYear>2014</inceptionYear>
 
@@ -27,7 +27,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <protex.api.version>7.2.0</protex.api.version>
+    <protex.api.version>7.8.0</protex.api.version>
     <suite.integration.shared>1.0.3</suite.integration.shared>
   </properties>
 
